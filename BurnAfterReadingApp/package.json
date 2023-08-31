@@ -1,0 +1,26 @@
+{
+  "name": "burnafterreadingapp",
+  "version": "1.0.0",
+  "description": "BurnAfterReading Application",
+  "main": "webpack.config.js",
+  "scripts": {
+    "js": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git.grandgeorg.de/Viktor/burnafterreading.git"
+  },
+  "keywords": [
+    "onetime password",
+    "password",
+    "burn after reading",
+    "paste bin",
+    "OTP"
+  ],
+  "author": "Viktor Grandgeorg <viktor@grandgeorg.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}

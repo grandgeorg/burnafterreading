@@ -12,5 +12,5 @@ use Bar\Client;
 require __DIR__ . '/../../BurnAfterReadingApp/vendor/autoload.php';
 
 
-$admin = new Client(__DIR__);
-$admin->run();
+$client = new Client(__DIR__);
+$client->run();

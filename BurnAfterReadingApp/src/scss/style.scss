@@ -162,6 +162,12 @@ a code {
   color: var(--clr-link);
 }
 
+pre {
+  font-family: 'Consolas', 'monaco', 'Courier New', Courier, monospace, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+}
+
+
 ::placeholder {
   color: var(--clr-base-l75);
 }
@@ -1181,6 +1187,7 @@ nav {
 
 .admin-content,
 .client-content {
+  display: block;
   width: 100%;
   padding: 1rem;
   background-color: var(--clr-base-d410);
@@ -1205,4 +1212,11 @@ nav {
   h1, h2 {
     margin: 0 0 0.5rem;
   }
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
 }

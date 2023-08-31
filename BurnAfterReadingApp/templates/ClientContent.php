@@ -4,9 +4,12 @@
     </div>
     <div class="wrapper client-content-wrapper">
         <h1 class="text-center"><?php echo $data['_']['content'] ?></h1>
-        <div class="client-content">
-            <?php echo nl2br(htmlspecialchars($data['bar']['post'])); ?>
+        <div class="client-content-controls">
+            <div class="copy">
+                <button class="btn btn-copy" id="copy-client-content" data-clipboard-target=".client-content"><?php echo $data['_']['copy_to_clipboard'] ?></button>
+            </div>
         </div>
+        <pre class="client-content"><?php echo htmlspecialchars($data['bar']['post']); ?></pre>
     </div>
     <?php if (isset($data['bar']['attachment'])) : ?>
         <div class="wrapper attachment-wrapper">
@@ -28,3 +31,5 @@
         </div>
     <?php endif; ?>
 </div>
+<!-- add js -->
+<script src="./assets/js/client.min.js"></script>

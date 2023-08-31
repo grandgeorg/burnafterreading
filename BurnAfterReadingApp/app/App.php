@@ -105,7 +105,7 @@ class App
 
     public function setHeaders(): void
     {
-        $cspheader = 'default-src \'none\'; base-uri \'self\'; form-action \'self\'; manifest-src \'self\'; connect-src \'none\'; script-src \'none\'; style-src \'self\'; font-src \'self\'; frame-src \'none\'; frame-ancestors \'none\'; img-src \'self\' data: blob:; media-src blob:; object-src \'none\'; worker-src \'none\'; child-src \'none\';';
+        $cspheader = 'default-src \'none\'; base-uri \'self\'; form-action \'self\'; manifest-src \'self\'; connect-src \'none\'; script-src \'self\'; style-src \'self\'; font-src \'self\'; frame-src \'none\'; frame-ancestors \'none\'; img-src \'self\' data: blob:; media-src blob:; object-src \'none\'; worker-src \'none\'; child-src \'none\';';
 
         $time = gmdate('D, d M Y H:i:s \G\M\T');
         header('Cache-Control: no-store, no-cache, no-transform, must-revalidate');
