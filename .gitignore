@@ -1,5 +1,5 @@
 notes
 BurnAfterReadingApp/pwd.php
 node_modules
+data/
 !data/.gitkeep
-data/*
