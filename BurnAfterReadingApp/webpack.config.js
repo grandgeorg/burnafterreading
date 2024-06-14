@@ -1,9 +1,12 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/js/client.js",
+  entry: {
+    client: "./src/js/client.js",
+    admin: "./src/js/admin.js",
+  },
   output: {
-    filename: "client.min.js",
+    filename: "[name].min.js",
     path: path.resolve(__dirname, "../public/bar/assets/js"),
   },
   mode: "production",
