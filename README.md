@@ -1,7 +1,3 @@
----
-title: BurnAfterReading
----
-
 ![logo BurnAfterReading](docs/img/logo-bar.jpg)
 
 # BurnAfterReading
