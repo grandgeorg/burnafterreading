@@ -70,3 +70,11 @@ require __DIR__ . '/../../../BurnAfterReadingApp/vendor/autoload.php';
 ```
 
 You can also rename the ```bar``` and the ```bar/admin``` directories to something else.
+
+### 4. Make data directory writable
+
+Make the ```BurnAfterReadingApp/data``` directory writable by the web server user e.g.:
+
+```bash
+chown -R www-data:www-data ./BurnAfterReadingApp/data
+```
