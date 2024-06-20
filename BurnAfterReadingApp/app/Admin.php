@@ -168,7 +168,6 @@ class Admin extends App
             throw new \Exception('File upload error');
         }
 
-
         if ($size > $maxSize) {
             throw new \Exception('File too large');
         }
@@ -187,7 +186,6 @@ class Admin extends App
         if (!unlink($fileOriginal)) {
             throw new \Exception('Could not delete original file');
         }
-
 
         return $name;
     }
