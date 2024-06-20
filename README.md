@@ -42,7 +42,7 @@ sudo apt-get install php8.3-sqlite3
 
 Create ```pwd.php``` file in ```BurnAfterReadingApp``` which returns a hashed password string.
 
-Generate string in console with e.g.
+Generate string in PHP interactive shell console with e.g.
 
 ```bash
 php -a
