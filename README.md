@@ -2,7 +2,9 @@
 
 # BurnAfterReading
 
-A simple and secure self-hosted web application with no dependencies for sharing text snippets and files. The content is saved encrypted on the server and the key is only available as a link and a password when the content is created. The content is immediately deleted after the first access.
+A simple and secure self-hosted web application with no dependencies for sharing text snippets and files (an attachment). The content is saved encrypted on the server and the key is only available as a link for the administrator (creator) when the content is created. The content is immediately deleted (burned) after the first successful access. The access is protected by a one-time password which is also displayed only once to the administrator when the content is created.
+
+When someone tries to access the content with an invalid password or an invalid link, access is denied and the client IP address is blocked after three failed attempts for ten minutes.
 
 ## Requirements
 
