@@ -10,8 +10,8 @@
 <body>
     <?php if (isset($_SESSION['loggedin'])) : ?>
         <nav class="py-2 px-2 gap-2 mb-3">
-            <a href="./">Neu</a>
-            <a href="./?logout">Logout</a>
+            <a href="./"><?php echo $data['_']['new'] ?></a>
+            <a href="./?logout"><?php echo $data['_']['logout'] ?></a>
         </nav>
     <?php endif ?>
     <main <?php echo (isset($data['main_class'])) ? 'class="' . $data['main_class'] .  '"' : '' ?>>
