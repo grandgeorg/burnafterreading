@@ -162,6 +162,7 @@ class Admin extends App
         $error = $file['error'];
         $size = $file['size'];
         $name = $file['name'];
+        $encryptedName = base64_encode($nonce . sodium_crypto_secretbox($name, $nonce, $key));
         $maxSize = 1024 * 1024 * 50; // 50 MB
 
         if ($error !== UPLOAD_ERR_OK) {
@@ -187,7 +188,7 @@ class Admin extends App
             throw new \Exception('Could not delete original file');
         }
 
-        return $name;
+        return $encryptedName;
     }
 
     public function saveInfo(string $dir, array $settings): void

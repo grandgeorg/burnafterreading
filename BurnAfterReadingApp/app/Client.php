@@ -162,7 +162,7 @@ class Client extends App
             return false;
         }
         if (isset($info['attachment'])) {
-            $this->config['bar']['attachment'] = $info['attachment'];
+            $this->config['bar']['attachment'] = $this->getAttachmentFileName($info['attachment']);
         }
         return true;
     }
@@ -193,6 +193,16 @@ class Client extends App
         }
 
         return true;
+    }
+
+    public function getAttachmentFileName(string $attachment): string
+    {
+        $attachment = base64_decode($attachment);
+        $nonce = mb_substr($attachment, 0, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, '8bit');
+        $ciphertext = mb_substr($attachment, SODIUM_CRYPTO_SECRETBOX_NONCEBYTES, null, '8bit');
+        $key = sodium_hex2bin($this->config['bar']['key']);
+        $name = sodium_crypto_secretbox_open($ciphertext, $nonce, $key);
+        return $name;
     }
 
     public function getAttachment(): bool
