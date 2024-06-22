@@ -95,7 +95,7 @@ To create a new content entry, open the admin area in your browser e.g.:
 https://your-server/bar/admin
 ```
 
-Enter the password you have set in ```pwd.php``` and create a new content.
+Enter the password you have set in ```pwd.php``` and create a new entry.
 
 Copy the link and the password and share it with the recipient.
 
