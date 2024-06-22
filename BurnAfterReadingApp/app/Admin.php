@@ -119,7 +119,7 @@ class Admin extends App
         $this->config['sec']['pwd'] = $pwd;
         $this->config['sec']['link'] = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") .
             '://' . $_SERVER['HTTP_HOST'] .
-            dirname($this->config['client_url']) .
+            (dirname($this->config['client_url']) === '/' ? "" :  dirname($this->config['client_url'])) .
             '/?' . $this->config['sec']['key'];
         $this->addToPage('AdminHead', $this->config);
         $this->addToPage('AdminContentShow', $this->config);
