@@ -86,3 +86,25 @@ Make the ```BurnAfterReadingApp/data``` directory writable by the web server use
 ```bash
 chown -R www-data:www-data ./BurnAfterReadingApp/data
 ```
+
+## Usage
+
+To create a new content entry, open the admin area in your browser e.g.:
+
+```http
+https://your-server/bar/admin
+```
+
+Enter the password you have set in ```pwd.php``` and create a new content.
+
+Copy the link and the password and share it with the recipient.
+
+The recipient can access the content by opening the link in the browser and entering the password.
+
+After the first successful access, the content is deleted from the server.
+
+If the link and the password have been intercepted and used by a third party, the access is denied and the user gets a message stating: "Something went wrong. Please contact the person who sent you this link immediately!"
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
