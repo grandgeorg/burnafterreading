@@ -91,7 +91,7 @@ chown -R www-data:www-data ./BurnAfterReadingApp/data
 
 To create a new content entry, open the admin area in your browser e.g.:
 
-```http
+```
 https://your-server/bar/admin
 ```
 
