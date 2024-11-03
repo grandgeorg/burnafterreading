@@ -115,10 +115,19 @@ class Admin extends App
         }
         $this->saveInfo($dirPath, $settings);
 
+        $protocol = 'http';
+        if (isset($_SERVER['HTTPS']) && (($_SERVER['HTTPS'] == 'on') || ($_SERVER['HTTPS'] == '1'))) {
+            $protocol = 'https';
+        } elseif (
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && !empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ||
+            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')
+        ) {
+            $protocol = 'https';
+        }
+
         $this->config['sec']['key'] = $dir . sodium_bin2hex($key);
         $this->config['sec']['pwd'] = $pwd;
-        $this->config['sec']['link'] = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') .
-            '://' . $_SERVER['HTTP_HOST'] .
+        $this->config['sec']['link'] = $protocol . '://' . $_SERVER['HTTP_HOST'] .
             (dirname($this->config['client_url']) === '/' ? '' :  dirname($this->config['client_url'])) .
             '/?' . $this->config['sec']['key'];
         $this->addToPage('AdminHead', $this->config);

@@ -1,0 +1,25 @@
+services:
+  bar:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile
+      args:
+        - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+        - ADMIN_SUBDIR=${ADMIN_SUBDIR}
+        - TIMEZONE=${TIMEZONE}
+    image: solarbaypilot/bar
+    ports:
+      - "${BAR_PORT}:80"
+    volumes:
+      - bar-data:/var/www/BurnAfterReadingApp/data
+      - bar-db:/var/www/BurnAfterReadingApp/db
+    environment:
+      ADMIN_PASSWORD: $ADMIN_PASSWORD
+      ADMIN_SUBDIR: $ADMIN_SUBDIR
+      TIMEZONE: $TIMEZONE
+    restart: unless-stopped
+volumes:
+  bar-data:
+    driver: local
+  bar-db:
+    driver: local

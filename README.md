@@ -12,14 +12,102 @@ The access is protected by a one-time password which is also displayed only once
 
 When someone tries to access the content with an invalid password or an invalid link, access is denied and the client IP address is blocked after three failed attempts for ten minutes.
 
-## Requirements
+The application can be installed on any web server that supports PHP or run as a Docker container.
+
+## Docker Installation
+
+### Requirements
+
+- Docker
+- Docker Compose v2.x
+- HTTP-Proxy like Apache or Nginx on the host system
+
+
+### 1. Configuration
+
+Rename the `.env.example` file to `.env` and update the environment variables with your own values.
+
+If you alter ```ADMIN_SUBDIR``` or ```TIMEZONE```, you have to build the Docker image again (see below), otherwise just run the Docker Compose command.
+
+### 2. Usage
+
+```bash
+docker compose up -d
+```
+
+### 3. Build Docker Image
+
+If you have altered the ```ADMIN_SUBDIR``` or ```TIMEZONE``` environment variables in the `.env` file, you have to build the Docker image again:
+
+```bash
+docker compose build
+```
+
+### 4. HTTP-Proxy
+
+You will need to use an HTTP-Proxy like Apache or Nginx to serve the application over HTTPS.
+
+Here is an example configuration for Apache:
+
+```apacheconf
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    ServerName yourdomain.tld
+    ServerSignature Off
+
+    DocumentRoot /var/www/html
+    Redirect permanent / https://yourdomain.tld/
+
+    ErrorLog ${APACHE_LOG_DIR}/yourdomain.tld_error.log
+    CustomLog ${APACHE_LOG_DIR}/yourdomain.tld_access.log combined
+</VirtualHost>
+<IfModule mod_ssl.c>
+    <VirtualHost *:443>
+        ServerAdmin webmaster@localhost
+        ServerName yourdomain.tld
+        ServerSignature Off
+
+        DocumentRoot /var/www/html
+
+        SSLEngine on
+        SSLCertificateFile /etc/ssl/certs/yourdomain.tld.crt
+        SSLCertificateKeyFile /etc/ssl/private/yourdomain.tld.key
+
+        SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1
+        SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305
+
+        SSLHonorCipherOrder on
+        SSLSessionTickets off
+
+        Header set X-Content-Type-Options "nosniff"
+        Header set Content-Security-Policy "frame-ancestors 'self';"
+        Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+        # this is important for the reverse proxy
+        RequestHeader set X-Forwarded-Proto "https"
+
+        Protocols h2 http/1.1
+
+        ProxyPreserveHost On
+        # set the correct port which you set in .env BAR_PORT here:
+        ProxyPass / http://localhost:8080/
+        ProxyPassReverse / http://localhost:8080/
+
+        ErrorLog ${APACHE_LOG_DIR}/yourdomain.tld_error.log
+        CustomLog ${APACHE_LOG_DIR}/yourdomain.tld_access.log combined
+    </VirtualHost>
+</IfModule>
+```
+
+## Manual Installation
+
+### Requirements
 
 - Requires PHP 7.1 or higher. PHP 8.x is recommended.
-- Requires php-sqlite3 extension.
+- Requires php-sqlite3 extension - enabled in PHP by default.
+- SSL connection - HTTPS is required for secure communication.
 
-## Installation
-
-### 1. Install php-sqlite3
+### 1. Check if php-sqlite3 extension is enabled
 
 The SQLite3 extension is enabled in PHP by default.
 
@@ -79,12 +167,13 @@ require __DIR__ . '/../../../BurnAfterReadingApp/vendor/autoload.php';
 
 You can also rename the ```bar``` and the ```bar/admin``` directories to something else.
 
-### 4. Make data directory writable
+### 4. Make data directories writable
 
-Make the ```BurnAfterReadingApp/data``` directory writable by the web server user e.g.:
+Make the ```BurnAfterReadingApp/data```  and the ```BurnAfterReadingApp/db``` directory writable by the web server user e.g.:
 
 ```bash
 chown -R www-data:www-data ./BurnAfterReadingApp/data
+chown -R www-data:www-data ./BurnAfterReadingApp/db
 ```
 
 ## Usage
