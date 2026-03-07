@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Bar;
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+
 class Client extends App
 {
 
@@ -55,6 +58,7 @@ class Client extends App
             $this->addToPage('ClientContent', $this->config);
             $this->addToPage('ClientFoot');
             echo $this->page;
+            $this->sendNotification();
             $this->burn();
         } else {
             $this->limit->add();
@@ -66,25 +70,49 @@ class Client extends App
 
     public function runChecks(): bool
     {
+        $logfile = __DIR__ . '/../logs/error.log';
+        $debug = false;
+
         if ($this->limit->check()) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " blocked by rate limit\n", 3, $logfile);
+            }
             return false;
         }
         if (!$this->checkCSRF('csrf-client')) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " failed CSRF check\n", 3, $logfile);
+            }
             return false;
         }
         if (!$this->checkPassword()) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " failed password check\n", 3, $logfile);
+            }
             return false;
         }
         if (!$this->getRequestedKey()) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " failed key retrieval\n", 3, $logfile);
+            }
             return false;
         }
         if (!$this->getKeyparts()) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " failed key parts retrieval\n", 3, $logfile);
+            }
             return false;
         }
         if (!$this->authenticate()) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " failed authentication\n", 3, $logfile);
+            }
             return false;
         }
         if (!$this->getPost()) {
+            if ($debug) {
+                error_log(date('Y-m-d H:i:s') . " failed post retrieval\n", 3, $logfile);
+            }
             return false;
         }
         return true;
@@ -163,6 +191,9 @@ class Client extends App
         }
         if (isset($info['attachment'])) {
             $this->config['bar']['attachment'] = $this->getAttachmentFileName($info['attachment']);
+        }
+        if (isset($info['notification_id'])) {
+            $this->config['bar']['notification_id'] = $info['notification_id'];
         }
         return true;
     }
@@ -270,6 +301,38 @@ class Client extends App
         unset($this->config['bar']);
     }
 
+    public function sendNotification(): void
+    {
+        if (
+            empty($this->config['mail']['enable']) ||
+            !isset($this->config['bar']['notification_id'])
+        ) {
+            return;
+        }
 
+        $mailConfig = $this->config['mail'];
+        $notificationId = $this->config['bar']['notification_id'];
+        $dateTime = date('Y-m-d H:i:s');
+        $subject = sprintf($this->config['_']['email_notification_subject'], $notificationId);
+        $body = sprintf($this->config['_']['email_notification_body'], $notificationId, $dateTime);
+
+        try {
+            $mail = new PHPMailer(true);
+            $mail->isSMTP();
+            $mail->Host = $mailConfig['host'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $mailConfig['username'];
+            $mail->Password = $mailConfig['password'];
+            $mail->SMTPSecure = $mailConfig['secure'] ? PHPMailer::ENCRYPTION_STARTTLS : '';
+            $mail->Port = $mailConfig['port'];
+            $mail->setFrom($mailConfig['from']);
+            $mail->addAddress($mailConfig['to']);
+            $mail->Subject = $subject;
+            $mail->Body = $body;
+            $mail->send();
+        } catch (PHPMailerException $e) {
+            // Silently fail — notification is best-effort
+        }
+    }
 
 }

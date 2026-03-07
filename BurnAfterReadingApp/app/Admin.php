@@ -91,6 +91,7 @@ class Admin extends App
     {
         $this->addCSRF('csrf-addcontent');
         $this->config['page'] = 'addcontent';
+        $this->config['notification_id_suggestion'] = bin2hex(random_bytes(8));
         $this->addToPage('AdminHead', $this->config);
         $this->addToPage('AdminContentAdd', $this->config);
         $this->addToPage('AdminFoot');
@@ -113,6 +114,13 @@ class Admin extends App
         if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
             $settings['attachment'] = $this->saveAttachment($dirPath, $key, $nonce);
         }
+        if (
+            !empty($this->config['mail']['enable']) &&
+            isset($_POST['notify_enable']) && $_POST['notify_enable'] === '1' &&
+            isset($_POST['notification_id']) && !empty(trim(strip_tags($_POST['notification_id'])))
+        ) {
+            $settings['notification_id'] = trim(strip_tags($_POST['notification_id']));
+        }
         $this->saveInfo($dirPath, $settings);
 
         $protocol = 'http';
@@ -120,7 +128,7 @@ class Admin extends App
             $protocol = 'https';
         } elseif (
             (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && !empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ||
-            (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')
+            (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && !empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] == 'on')
         ) {
             $protocol = 'https';
         }

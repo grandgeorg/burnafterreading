@@ -999,7 +999,8 @@ form {
   width: 100%;
 }
 
-input[type="password"] {
+input[type="password"],
+input[type="text"] {
   margin: 0;
   padding: 0.5rem 1rem;
   width: 100%;
@@ -1126,6 +1127,21 @@ input[type="file"]::file-selector-button {
   border-radius: 0;
 }
 
+input[type="checkbox"] {
+  width: 1.25em;
+  height: 1.25em;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  accent-color: var(--clr-base);
+  cursor: pointer;
+  + label {
+    display: inline-block;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.25;
+    color: var(--clr-base-l300);
+  }
+}
+
 .container {
   display: flex;
   flex-direction: column;
@@ -1219,4 +1235,13 @@ nav {
   align-items: center;
   justify-content: center;
   padding: 0.5rem 0;
+}
+
+.email-notification-settings {
+  display: flex;
+  gap: 0 1.5rem;
+  flex-wrap: wrap;
+  div:last-child {
+    flex: 1 1 0;
+  }
 }
