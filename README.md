@@ -50,6 +50,13 @@ You will need to use an HTTP-Proxy like Apache or Nginx to serve the application
 Here is an example configuration for Apache:
 
 ```apacheconf
+# make sure to enable the following modules in Apache:
+# a2enmod ssl
+# a2enmod proxy
+# a2enmod proxy_http
+# a2enmod headers
+# a2enmod remoteip
+
 <VirtualHost *:80>
     ServerAdmin webmaster@localhost
     ServerName yourdomain.tld
@@ -82,6 +89,17 @@ Here is an example configuration for Apache:
         Header set X-Content-Type-Options "nosniff"
         Header set Content-Security-Policy "frame-ancestors 'self';"
         Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+        
+        # not needed as the app is already setting these headers, 
+        # but it doesn't hurt to set them here as well:
+        # Header always set Referrer-Policy "no-referrer"
+        # Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+        # this needs mod_remoteip and is needed for the reverse proxy to get the correct client IP address in the application logs and for the brute-force protection to work correctly:
+        
+        RemoteIPHeader X-Forwarded-For
+        # adjust the IP range to your needs, this is the default private IP range for Docker containers, if you are using a different setup, you might need to adjust this:
+        RemoteIPInternalProxy 172.16.0.0/12
 
         # this is important for the reverse proxy
         RequestHeader set X-Forwarded-Proto "https"
