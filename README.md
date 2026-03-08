@@ -12,6 +12,8 @@ The access is protected by a one-time password which is also displayed only once
 
 When someone tries to access the content with an invalid password or an invalid link, access is denied and the client IP address is blocked after three failed attempts for ten minutes.
 
+If enabled in the configuration, the application can send an email notification to the administrator when the content is accessed.
+
 The application can be installed on any web server that supports PHP or run as a Docker container.
 
 ## Docker Installation
@@ -46,26 +48,29 @@ Rename `BurnAfterReadingApp/config.example.php` to `BurnAfterReadingApp/config.p
 
 The `config.php` file is bind-mounted into the container (read-only), so changes take effect on the next request without rebuilding.
 
-### 2. Install dependencies
+### 2. Build Docker Image
+
+You don't have to build the Docker image yourself, the image is available on Docker Hub as [`solarbaypilot/bar`](https://hub.docker.com/r/solarbaypilot/bar) and will be pulled automatically when you run `docker compose up` for the first time.
+
+If you want to build the image yourself, run:
 
 ```bash
 cd BurnAfterReadingApp
 composer install --no-dev
 ```
 
-### 3. Build Docker Image
-
+Then go back to the root directory and run:
 ```bash
 docker compose build
 ```
 
-### 4. Usage
+### 3. Usage
 
 ```bash
 docker compose up -d
 ```
 
-### 5. HTTP-Proxy
+### 4. HTTP-Proxy
 
 You will need to use an HTTP-Proxy like Apache or Nginx to serve the application over HTTPS.
 
