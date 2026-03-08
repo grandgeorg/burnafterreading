@@ -202,7 +202,7 @@ return '$2y$10$vH0sp9VPFAnAnw2OrSX8BOXfx2KSB2orwydGq1lsdMFk50h9oTDcW';
 
 ### 4. Configure the application
 
-Rename `BurnAfterReadingApp/config.example.php` to `BurnAfterReadingApp/config.php` and edit it to your needs (mail settings, language, etc.).
+Rename `BurnAfterReadingApp/config.example.php` to `BurnAfterReadingApp/config.php` and edit it to your needs (mail settings etc.).
 
 ### 5. Set DocumentRoot
 
