@@ -115,7 +115,9 @@ class Admin extends App
             $settings['attachment'] = $this->saveAttachment($dirPath, $key, $nonce);
         }
         if (
-            !empty($this->config['mail']['enable']) &&
+            isset($this->config['mail']) &&
+            isset($this->config['mail']['enable']) &&
+            $this->config['mail']['enable'] === true &&
             isset($_POST['notify_enable']) && $_POST['notify_enable'] === '1' &&
             isset($_POST['notification_id']) && !empty(trim(strip_tags($_POST['notification_id'])))
         ) {
