@@ -70,48 +70,45 @@ class Client extends App
 
     public function runChecks(): bool
     {
-        $logfile = __DIR__ . '/../logs/error.log';
-        $debug = false;
-
         if ($this->limit->check()) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " blocked by rate limit\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " blocked by rate limit\n", 3, $this->config['error_log']);
             }
             return false;
         }
         if (!$this->checkCSRF('csrf-client')) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " failed CSRF check\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " failed CSRF check\n", 3, $this->config['error_log']);
             }
             return false;
         }
         if (!$this->checkPassword()) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " failed password check\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " failed password check\n", 3, $this->config['error_log']);
             }
             return false;
         }
         if (!$this->getRequestedKey()) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " failed key retrieval\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " failed key retrieval\n", 3, $this->config['error_log']);
             }
             return false;
         }
         if (!$this->getKeyparts()) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " failed key parts retrieval\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " failed key parts retrieval\n", 3, $this->config['error_log']);
             }
             return false;
         }
         if (!$this->authenticate()) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " failed authentication\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " failed authentication\n", 3, $this->config['error_log']);
             }
             return false;
         }
         if (!$this->getPost()) {
-            if ($debug) {
-                error_log(date('Y-m-d H:i:s') . " failed post retrieval\n", 3, $logfile);
+            if ($this->config['debug']) {
+                error_log(date('Y-m-d H:i:s') . " failed post retrieval\n", 3, $this->config['error_log']);
             }
             return false;
         }
@@ -304,7 +301,9 @@ class Client extends App
     public function sendNotification(): void
     {
         if (
-            empty($this->config['mail']['enable']) ||
+            !isset($this->config['mail']) ||
+            !isset($this->config['mail']['enable']) ||
+            $this->config['mail']['enable'] !== true ||
             !isset($this->config['bar']['notification_id'])
         ) {
             return;
@@ -319,6 +318,8 @@ class Client extends App
         try {
             $mail = new PHPMailer(true);
             $mail->isSMTP();
+            $mail->CharSet = 'UTF-8';
+            $mail->Encoding = 'base64';
             $mail->Host = $mailConfig['host'];
             $mail->SMTPAuth = true;
             $mail->Username = $mailConfig['username'];
