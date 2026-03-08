@@ -1,6 +1,8 @@
 <div class="container container-sm">
     <h1><?php echo $data['_']['login'] ?></h1>
-    <?php if (in_array('something_went_wrong', $data['errors'])): ?>
+    <?php if (in_array('cookies_required', $data['errors'])): ?>
+    <div class="alert alert-danger mb-3"><?php echo $data['_']['cookies_required'] ?></div>
+    <?php elseif (in_array('something_went_wrong', $data['errors'])): ?>
     <div class="alert alert-danger mb-3"><?php echo $data['_']['something_went_wrong'] ?></div>
     <?php endif; ?>
     <form method="post" action="<?php echo $_SERVER['REQUEST_URI'] ?>">

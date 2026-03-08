@@ -61,8 +61,12 @@ class Client extends App
             $this->sendNotification();
             $this->burn();
         } else {
-            $this->limit->add();
-            $this->config['errors'][] = 'something_went_wrong';
+            if (!isset($_COOKIE[session_name()])) {
+                $this->config['errors'][] = 'cookies_required';
+            } else {
+                $this->limit->add();
+                $this->config['errors'][] = 'something_went_wrong';
+            }
             $this->loginAction();
         }
 
