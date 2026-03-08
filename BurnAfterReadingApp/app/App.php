@@ -57,7 +57,7 @@ class App
         session_set_cookie_params([
             'lifetime' => 0,
             'path' => $this->config['client_url'],
-            'domain' => $_SERVER['HTTP_HOST'],
+            'domain' => '',
             'secure' => true,
             'httponly' => true,
             'samesite' => 'Strict',
@@ -96,8 +96,9 @@ class App
         if (
             isset($_POST[$name], $_SESSION[$name]) &&
             !empty($_POST[$name]) && !empty($_SESSION[$name]) &&
-            $_SESSION[$name] === $_POST[$name]
+            hash_equals($_SESSION[$name], $_POST[$name])
         ) {
+            unset($_SESSION[$name]);
             return true;
         }
         return false;
@@ -131,6 +132,8 @@ class App
         header('Cross-Origin-Embedder-Policy: require-corp');
         header('X-Content-Type-Options: nosniff');
         header('X-Robots-Tag: noindex, nofollow', true);
+        header('Referrer-Policy: no-referrer');
+        header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
 
     }
 

@@ -105,14 +105,13 @@ class Admin extends App
         $dir = $this->makeDir(); // 32 chars
         $dirPath = $this->config['data_path'] . DIRECTORY_SEPARATOR . $dir;
         $key = sodium_crypto_secretbox_keygen();
-        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $pwd = $this->getRandomPassword(16);
         $settings = [
             'pwd' => password_hash($pwd, PASSWORD_DEFAULT),
         ];
-        $this->savePost($dirPath, $key, $nonce);
+        $this->savePost($dirPath, $key);
         if (isset($_FILES['attachment']) && $_FILES['attachment']['error'] === 0) {
-            $settings['attachment'] = $this->saveAttachment($dirPath, $key, $nonce);
+            $settings['attachment'] = $this->saveAttachment($dirPath, $key);
         }
         if (
             isset($this->config['mail']) &&
@@ -161,8 +160,9 @@ class Admin extends App
         return $random;
     }
 
-    public function savePost(string $dir, string $key, string $nonce): void
+    public function savePost(string $dir, string $key): void
     {
+        $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
         $post = '';
         if (isset($_POST['content']) && !empty($_POST['content'])) {
             $post = $_POST['content'];
@@ -175,13 +175,14 @@ class Admin extends App
         }
     }
 
-    public function saveAttachment(string $dir, string $key, string $nonce): string
+    public function saveAttachment(string $dir, string $key): string
     {
         $file = $_FILES['attachment'];
         $error = $file['error'];
         $size = $file['size'];
         $name = $file['name'];
-        $encryptedName = base64_encode($nonce . sodium_crypto_secretbox($name, $nonce, $key));
+        $nonceName = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $encryptedName = base64_encode($nonceName . sodium_crypto_secretbox($name, $nonceName, $key));
         $maxSize = 1024 * 1024 * 50; // 50 MB
 
         if ($error !== UPLOAD_ERR_OK) {
@@ -192,12 +193,13 @@ class Admin extends App
             throw new \Exception('File too large');
         }
 
-        $fileOriginal = $dir . DIRECTORY_SEPARATOR . $file['name'];
+        $fileOriginal = $dir . DIRECTORY_SEPARATOR . 'upload.tmp';
         move_uploaded_file($file['tmp_name'], $fileOriginal);
 
         $fileEncrypted = $dir . DIRECTORY_SEPARATOR . 'attachment.txt';
-        $encrypted = sodium_crypto_secretbox(file_get_contents($fileOriginal), $nonce, $key);
-        $encoded = base64_encode($nonce . $encrypted);
+        $nonceFile = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+        $encrypted = sodium_crypto_secretbox(file_get_contents($fileOriginal), $nonceFile, $key);
+        $encoded = base64_encode($nonceFile . $encrypted);
 
         if (!file_put_contents($fileEncrypted, $encoded)) {
             throw new \Exception('Could not save attachment');

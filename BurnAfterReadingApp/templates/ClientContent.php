@@ -22,10 +22,10 @@
                     </svg>
                 </div>
                 <div class="filename">
-                    <?php echo $data['bar']['attachment'] ?>
+                    <?php echo htmlspecialchars($data['bar']['attachment'], ENT_QUOTES, 'UTF-8') ?>
                 </div>
                 <div class="download">
-                    <a href="data:application/octet-stream;base64,<?php echo $data['bar']['attachment_content'] ?>" download="<?php echo $data['bar']['attachment'] ?>" class="btn"><?php echo $data['_']['download'] ?></a>
+                    <a href="data:application/octet-stream;base64,<?php echo $data['bar']['attachment_content'] ?>" download="<?php echo htmlspecialchars($data['bar']['attachment'], ENT_QUOTES, 'UTF-8') ?>" class="btn"><?php echo $data['_']['download'] ?></a>
                 </div>
             </div>
         </div>

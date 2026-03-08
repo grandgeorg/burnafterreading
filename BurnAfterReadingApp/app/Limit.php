@@ -66,13 +66,8 @@ class Limit
 
   public function getIp(): string
   {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-      return $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      return $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } else {
-      return $_SERVER['REMOTE_ADDR'];
-    }
+    // we use REMOTE_ADDR here only, because if the app is behind a reverse proxy, the correct client IP address should be set in REMOTE_ADDR by the reverse proxy (e.g. using mod_remoteip in Apache), and we don't want to rely on HTTP headers like X-Forwarded-For which can be easily spoofed by the client and would allow an attacker to bypass the brute-force protection by simply setting a fake X-Forwarded-For header with a different IP address for each request.
+    return $_SERVER['REMOTE_ADDR'];
   }
 
 
