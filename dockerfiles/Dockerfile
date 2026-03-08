@@ -1,4 +1,4 @@
-FROM php:8.2-apache
+FROM php:8.4-apache
 
 # Install dependencies
 RUN set -ex; \
@@ -72,6 +72,7 @@ RUN chown -R www-data:www-data /var/www/BurnAfterReadingApp/db
 
 # copy docker-entrypoint.sh to /
 COPY dockerfiles/docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 # Start the Apache service
