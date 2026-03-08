@@ -22,28 +22,50 @@ The application can be installed on any web server that supports PHP or run as a
 - Docker Compose v2.x
 - HTTP-Proxy like Apache or Nginx on the host system
 
-
 ### 1. Configuration
 
-Rename the `.env.example` file to `.env` and update the environment variables with your own values.
+#### Environment variables
 
-If you alter ```ADMIN_SUBDIR``` or ```TIMEZONE```, you have to build the Docker image again (see below), otherwise just run the Docker Compose command.
+Rename the `.env.example` file to `.env` and update the environment variables with your own values:
 
-### 2. Usage
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `ADMIN_PASSWORD` | Password for the admin area | `secret` |
+| `ADMIN_SUBDIR` | Subdirectory name for the admin area | `admin` |
+| `TIMEZONE` | Timezone for the application | `Europe/Berlin` |
+| `BAR_PORT` | Port the container listens on | `8080` |
+| `MAX_EXECUTION_TIME` | PHP max execution time in seconds | `600` |
+| `MEMORY_LIMIT` | PHP memory limit | `512M` |
+| `UPLOAD_LIMIT` | PHP upload/post max size | `512M` |
+
+All environment variables are applied at container startup — no rebuild required when changing values. Just restart the container.
+
+#### Application config
+
+Rename `BurnAfterReadingApp/config.example.php` to `BurnAfterReadingApp/config.php` and edit it to your needs.
+
+The `config.php` file is bind-mounted into the container (read-only), so changes take effect on the next request without rebuilding.
+
+### 2. Install dependencies
 
 ```bash
-docker compose up -d
+cd BurnAfterReadingApp
+composer install --no-dev
 ```
 
 ### 3. Build Docker Image
-
-If you have altered the ```ADMIN_SUBDIR``` or ```TIMEZONE``` environment variables in the `.env` file, you have to build the Docker image again:
 
 ```bash
 docker compose build
 ```
 
-### 4. HTTP-Proxy
+### 4. Usage
+
+```bash
+docker compose up -d
+```
+
+### 5. HTTP-Proxy
 
 You will need to use an HTTP-Proxy like Apache or Nginx to serve the application over HTTPS.
 
@@ -121,11 +143,19 @@ Here is an example configuration for Apache:
 
 ### Requirements
 
-- Requires PHP 7.1 or higher. PHP 8.x is recommended.
-- Requires php-sqlite3 extension - enabled in PHP by default.
-- SSL connection - HTTPS is required for secure communication.
+- PHP 7.1 or higher (PHP 8.x recommended)
+- php-sqlite3 extension (enabled in PHP by default)
+- Composer
+- SSL connection — HTTPS is required for secure communication
 
-### 1. Check if php-sqlite3 extension is enabled
+### 1. Install dependencies
+
+```bash
+cd BurnAfterReadingApp
+composer install --no-dev
+```
+
+### 2. Check if php-sqlite3 extension is enabled
 
 The SQLite3 extension is enabled in PHP by default.
 
@@ -144,7 +174,7 @@ sudo apt-get install php-sqlite3
 sudo apt-get install php8.3-sqlite3
 ```
 
-### 2. Create password hash for admin area
+### 3. Create password hash for admin area
 
 Create ```pwd.php``` file in ```BurnAfterReadingApp``` which returns a hashed password string.
 
@@ -165,7 +195,11 @@ Copy the String into ```pwd.php``` as a return statement with e.g.:
 return '$2y$10$vH0sp9VPFAnAnw2OrSX8BOXfx2KSB2orwydGq1lsdMFk50h9oTDcW';
 ```
 
-### 3. Set DocumentRoot
+### 4. Configure the application
+
+Rename `BurnAfterReadingApp/config.example.php` to `BurnAfterReadingApp/config.php` and edit it to your needs (mail settings, language, etc.).
+
+### 5. Set DocumentRoot
 
 Set the `DocumentRoot` to ```/path/to/this/repo/public``` directory in your HTTP-server configuration.
 
@@ -185,7 +219,7 @@ require __DIR__ . '/../../../BurnAfterReadingApp/vendor/autoload.php';
 
 You can also rename the ```bar``` and the ```bar/admin``` directories to something else.
 
-### 4. Make data directories writable
+### 6. Make data directories writable
 
 Make the ```BurnAfterReadingApp/data```  and the ```BurnAfterReadingApp/db``` directory writable by the web server user e.g.:
 
