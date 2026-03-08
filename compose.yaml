@@ -11,6 +11,7 @@ services:
     ports:
       - "${BAR_PORT}:80"
     volumes:
+      - ./BurnAfterReadingApp/config.php:/var/www/BurnAfterReadingApp/config.php:ro
       - bar-data:/var/www/BurnAfterReadingApp/data
       - bar-db:/var/www/BurnAfterReadingApp/db
     environment:

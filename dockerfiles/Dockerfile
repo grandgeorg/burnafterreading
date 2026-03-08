@@ -65,8 +65,7 @@ COPY public/bar/assets /var/www/html/assets
 # make BurnAfterReadingApp directory under /var/www
 RUN mkdir -p /var/www/BurnAfterReadingApp
 
-# copy onfig.php and langs.php from BurnAfterReadingApp to /var/www/BurnAfterReadingApp
-COPY BurnAfterReadingApp/config.php /var/www/BurnAfterReadingApp
+# copy langs.php from BurnAfterReadingApp to /var/www/BurnAfterReadingApp
 COPY BurnAfterReadingApp/langs.php /var/www/BurnAfterReadingApp
 
 # copy app, data, db, templates, vendor directories from BurnAfterReadingApp to /var/www/BurnAfterReadingApp
