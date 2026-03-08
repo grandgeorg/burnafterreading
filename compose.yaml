@@ -3,10 +3,6 @@ services:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile
-      args:
-        - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-        - ADMIN_SUBDIR=${ADMIN_SUBDIR}
-        - TIMEZONE=${TIMEZONE}
     image: solarbaypilot/bar
     ports:
       - "${BAR_PORT}:80"
@@ -17,7 +13,10 @@ services:
     environment:
       ADMIN_PASSWORD: $ADMIN_PASSWORD
       ADMIN_SUBDIR: $ADMIN_SUBDIR
-      TIMEZONE: $TIMEZONE
+      TZ: $TIMEZONE
+      MAX_EXECUTION_TIME: $MAX_EXECUTION_TIME
+      MEMORY_LIMIT: $MEMORY_LIMIT
+      UPLOAD_LIMIT: $UPLOAD_LIMIT
     restart: unless-stopped
 volumes:
   bar-data:

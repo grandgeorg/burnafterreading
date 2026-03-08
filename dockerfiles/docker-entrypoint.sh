@@ -1,16 +1,17 @@
 #!/bin/bash
 
+# Setup admin subdirectory at runtime
+if [ -n "$ADMIN_SUBDIR" ]; then
+    mkdir -p "/var/www/html/$ADMIN_SUBDIR"
+    cp /var/www/admin-index.php "/var/www/html/$ADMIN_SUBDIR/index.php"
+fi
+
+# Hash and store admin password
 HASHED_PASSWORD=$(php -r "echo password_hash(getenv('ADMIN_PASSWORD'), PASSWORD_DEFAULT);")
-export HASHED_ADMIN_PASSWORD=$HASHED_PASSWORD
-echo "<?php return '$HASHED_ADMIN_PASSWORD';" > /var/www/BurnAfterReadingApp/pwd.php
+echo "<?php return '$HASHED_PASSWORD';" > /var/www/BurnAfterReadingApp/pwd.php
 
-# remove $ADMIN_PASSWORD from environment
+# Remove sensitive variables from environment
 unset ADMIN_PASSWORD
-
-# remove $HASHED_PASSWORD from environment
 unset HASHED_PASSWORD
-
-# remove $HASHED_ADMIN_PASSWORD from environment
-unset HASHED_ADMIN_PASSWORD
 
 exec "$@"

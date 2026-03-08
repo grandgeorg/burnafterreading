@@ -1,13 +1,5 @@
 FROM php:8.2-apache
 
-ARG ADMIN_PASSWORD
-ARG ADMIN_SUBDIR
-ARG TIMEZONE
-
-ENV ADMIN_PASSWORD=$ADMIN_PASSWORD
-ENV ADMIN_SUBDIR=$ADMIN_SUBDIR
-ENV TZ=$TIMEZONE
-
 # Install dependencies
 RUN set -ex; \
     apt-get update; \
@@ -50,14 +42,11 @@ RUN set -ex; \
 
 WORKDIR /var/www/html
 
-# make ADMIN_SUBDIR directory under /var/www/html
-RUN mkdir -p /var/www/html/$ADMIN_SUBDIR
-
-# copy index.html to /var/www/html
+# copy index.php to /var/www/html
 COPY dockerfiles/public/index.php /var/www/html
 
-# copy admin/index.html to /var/www/html/$ADMIN_SUBDIR
-COPY dockerfiles/public/admin/index.php /var/www/html/$ADMIN_SUBDIR
+# stage admin index.php for runtime setup by entrypoint
+COPY dockerfiles/public/admin/index.php /var/www/admin-index.php
 
 # copy ../public/bar/assets to /var/www/html
 COPY public/bar/assets /var/www/html/assets
