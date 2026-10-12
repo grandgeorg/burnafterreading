@@ -1,4 +1,4 @@
-@import "mixins";
+@use "abstracts" as *;
 
 // scss variables
 $font-family-sans-serif: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,
@@ -1209,6 +1209,11 @@ nav {
   background-color: var(--clr-base-d410);
   border: 1px solid var(--clr-base-d260);
   border-radius: 6px;
+  overflow-wrap: break-word;
+}
+
+.client-content {
+  white-space: pre-wrap;
 }
 
 .attachment {
