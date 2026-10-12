@@ -4,7 +4,8 @@
   "description": "BurnAfterReading Application",
   "main": "webpack.config.js",
   "scripts": {
-    "js": "webpack"
+    "js": "webpack",
+    "css": "sass --no-source-map --style=compressed src/scss/style.scss ../public/bar/assets/css/style.min.css"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "author": "Viktor Grandgeorg <viktor@grandgeorg.de>",
   "license": "MIT",
   "devDependencies": {
+    "sass": "^1.105.1",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   }
