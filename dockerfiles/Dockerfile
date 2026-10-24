@@ -15,9 +15,9 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
-ENV MAX_EXECUTION_TIME 600
-ENV MEMORY_LIMIT 512M
-ENV UPLOAD_LIMIT 512M
+ENV MAX_EXECUTION_TIME=600
+ENV MEMORY_LIMIT=512M
+ENV UPLOAD_LIMIT=512M
 RUN set -ex; \
     { \
         echo 'opcache.memory_consumption=128'; \
