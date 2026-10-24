@@ -1,0 +1,12 @@
+# Normalize line endings to LF in the repository and working tree
+* text=auto eol=lf
+
+# Binary files
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.woff binary
+*.woff2 binary
+*.sqlite3 binary
