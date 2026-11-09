@@ -1,4 +1,4 @@
-![logo BurnAfterReading](docs/img/logo-bar.jpg)
+![logo BurnAfterReading](docs/img/logo-bar-banner.jpg)
 
 # BurnAfterReading
 
